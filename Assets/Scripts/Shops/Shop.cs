@@ -2,11 +2,12 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using GameDevTV.Inventories;
+using RPG.Control;
 using UnityEngine;
 
 namespace RPG.Shops
 {
-    public class Shop : MonoBehaviour
+    public class Shop : MonoBehaviour, IRaycastable
     {
         public class ShopItem
         {
@@ -27,5 +28,20 @@ namespace RPG.Shops
         public float TransactionTotal() { return 0; }
         public bool CanTransact() { return true; }
         public void ConfirmTransaction() { }
+
+        public CursorType GetCursorType()
+        {
+            return CursorType.Shop;
+        }
+
+        public bool HandleRaycast(PlayerController callingController)
+        {
+            if (Input.GetMouseButtonDown(0))
+            {
+                callingController.GetComponent<Shopper>().SetActiveShop(this);
+            }
+
+            return true;
+        }
     }
 }
