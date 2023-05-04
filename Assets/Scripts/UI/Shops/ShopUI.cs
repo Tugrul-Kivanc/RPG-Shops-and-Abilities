@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using RPG.Shops;
@@ -8,7 +9,9 @@ namespace RPG.UI.Shops
 {
     public class ShopUI : MonoBehaviour
     {
-        [SerializeField] TextMeshProUGUI shopName;
+        [SerializeField] private TextMeshProUGUI shopName;
+        [SerializeField] private Transform listRoot;
+        [SerializeField] private RowUI rowPrefab;
         private Shopper shopper = null;
         private Shop currentShop = null;
 
@@ -30,6 +33,27 @@ namespace RPG.UI.Shops
 
             if (currentShop == null) return;
             shopName.text = currentShop.ShopName;
+
+            RefreshUI();
+        }
+
+        private void RefreshUI()
+        {
+            // foreach (RowUI item in listRoot.GetComponentsInChildren<RowUI>())
+            // {
+            //     Destroy(item.gameObject);
+            // }
+
+            foreach (Transform child in listRoot)
+            {
+                Destroy(child.gameObject);
+            }
+
+            foreach (ShopItem item in currentShop.GetFilteredItems())
+            {
+                RowUI row = Instantiate<RowUI>(rowPrefab, listRoot);
+                row.Setup(item);
+            }
         }
 
         public void Close()

@@ -121,6 +121,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shopName: {fileID: 3881221366370962373}
+  listRoot: {fileID: 8289986129562075104}
+  rowPrefab: {fileID: 2357125836624278629, guid: cdc36db44fd42e44fa6e6ca92cce8206,
+    type: 3}
 --- !u!1001 &590397900624639493
 PrefabInstance:
   m_ObjectHideFlags: 0
