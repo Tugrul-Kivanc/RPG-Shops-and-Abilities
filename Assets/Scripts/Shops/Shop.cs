@@ -9,6 +9,8 @@ namespace RPG.Shops
 {
     public class Shop : MonoBehaviour, IRaycastable
     {
+        [SerializeField] private string shopName;
+        public string ShopName => shopName;
         public class ShopItem
         {
             InventoryItem item;
