@@ -11,6 +11,7 @@ namespace RPG.Shops
     {
         [SerializeField] private string shopName;
         public string ShopName => shopName;
+        private Shopper currentShopper = null;
 
         [System.Serializable]
         private class StockItemConfig
@@ -23,6 +24,10 @@ namespace RPG.Shops
         private Dictionary<InventoryItem, int> transaction = new Dictionary<InventoryItem, int>();
 
         public event Action onChange;
+        public void SetShopper(Shopper shopper)
+        {
+            currentShopper = shopper;
+        }
         public void SelectMode(bool isBuying) { }
         public bool IsInBuyingMode() { return true; }
         public void SelectFilter(ItemCategory category) { }
@@ -61,7 +66,26 @@ namespace RPG.Shops
         }
         public float TransactionTotal() { return 0; }
         public bool CanTransact() { return true; }
-        public void ConfirmTransaction() { }
+        public void ConfirmTransaction()
+        {
+            Inventory shopperInventory = currentShopper.GetComponent<Inventory>();
+            if (shopperInventory == null) return;
+
+            var transactionTemp = new Dictionary<InventoryItem, int>(transaction);
+            foreach (InventoryItem item in transactionTemp.Keys)
+            {
+                int quantity = transactionTemp[item];
+                for (int i = 0; i < quantity; i++)
+                {
+                    bool isSuccessful = shopperInventory.AddToFirstEmptySlot(item, 1);
+
+                    if (isSuccessful)
+                    {
+                        AddToTransaction(item, -1);
+                    }
+                }
+            }
+        }
 
         public CursorType GetCursorType()
         {
