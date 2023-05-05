@@ -15,13 +15,29 @@ namespace RPG.UI.Shops
         [SerializeField] private TextMeshProUGUI stockField;
         [SerializeField] private TextMeshProUGUI priceField;
         [SerializeField] private TextMeshProUGUI quantityField;
-        public void Setup(ShopItem item)
+        private Shop currentShop = null;
+        private ShopItem item = null;
+
+        public void Setup(Shop currentShop, ShopItem item)
         {
+            this.currentShop = currentShop;
+            this.item = item;
+
             iconField.sprite = item.Icon;
             nameField.text = item.Name;
             stockField.text = $"{item.Stock}";
             priceField.text = $"${item.Price:N2}"; // 2 Decimal precision
-            quantityField.text = $"- {item.Quantity} +";
+            quantityField.text = $"{item.QuantityInTransaction}";
+        }
+
+        public void Add()
+        {
+            currentShop.AddToTransaction(item.GetInventoryItem(), +1);
+        }
+
+        public void Remove()
+        {
+            currentShop.AddToTransaction(item.GetInventoryItem(), -1);
         }
     }
 }
