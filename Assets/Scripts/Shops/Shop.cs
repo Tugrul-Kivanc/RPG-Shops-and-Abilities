@@ -32,7 +32,7 @@ namespace RPG.Shops
         public bool IsInBuyingMode() { return true; }
         public void SelectFilter(ItemCategory category) { }
         public ItemCategory GetFilter() { return ItemCategory.None; }
-        public IEnumerable<ShopItem> GetFilteredItems()
+        public IEnumerable<ShopItem> GetAllItems()
         {
             foreach (StockItemConfig config in stockConfig)
             {
@@ -47,6 +47,10 @@ namespace RPG.Shops
 
                 yield return new ShopItem(config.item, config.initialStock, price, quantityInTransaction);
             }
+        }
+        public IEnumerable<ShopItem> GetFilteredItems()
+        {
+            return GetAllItems();
         }
         public void AddToTransaction(InventoryItem item, int quantity)
         {
@@ -64,7 +68,15 @@ namespace RPG.Shops
 
             onChange?.Invoke();
         }
-        public float TransactionTotal() { return 0; }
+        public float TransactionTotal()
+        {
+            float totalPrice = 0f;
+            foreach (ShopItem item in GetAllItems())
+            {
+                totalPrice += item.Price * item.QuantityInTransaction;
+            }
+            return totalPrice;
+        }
         public bool CanTransact() { return true; }
         public void ConfirmTransaction()
         {

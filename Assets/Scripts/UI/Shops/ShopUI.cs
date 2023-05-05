@@ -10,6 +10,7 @@ namespace RPG.UI.Shops
     public class ShopUI : MonoBehaviour
     {
         [SerializeField] private TextMeshProUGUI shopName;
+        [SerializeField] private TextMeshProUGUI totalField;
         [SerializeField] private Transform listRoot;
         [SerializeField] private RowUI rowPrefab;
         private Shopper shopper = null;
@@ -46,11 +47,6 @@ namespace RPG.UI.Shops
 
         private void RefreshUI()
         {
-            // foreach (RowUI item in listRoot.GetComponentsInChildren<RowUI>())
-            // {
-            //     Destroy(item.gameObject);
-            // }
-
             foreach (Transform child in listRoot)
             {
                 Destroy(child.gameObject);
@@ -61,6 +57,8 @@ namespace RPG.UI.Shops
                 RowUI row = Instantiate<RowUI>(rowPrefab, listRoot);
                 row.Setup(currentShop, item);
             }
+
+            totalField.text = $"Total: ${currentShop.TransactionTotal():N2}";
         }
 
         public void Close()
