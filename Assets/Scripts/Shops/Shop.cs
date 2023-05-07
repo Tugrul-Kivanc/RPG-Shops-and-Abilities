@@ -95,7 +95,22 @@ namespace RPG.Shops
             }
             return totalPrice;
         }
-        public bool CanTransact() { return true; }
+        public bool CanTransact()
+        {
+            if (IsTransactionEmpty()) return false;
+            if (!HasSufficientFunds()) return false;
+            return true;
+        }
+        private bool IsTransactionEmpty()
+        {
+            return transaction.Count <= 0;
+        }
+        public bool HasSufficientFunds()
+        {
+            Purse purse = currentShopper.GetComponent<Purse>();
+            if (purse == null) return false;
+            return purse.Balance >= TransactionTotal();
+        }
         public void ConfirmTransaction()
         {
             Inventory shopperInventory = currentShopper.GetComponent<Inventory>();

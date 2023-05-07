@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using RPG.Shops;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace RPG.UI.Shops
 {
@@ -13,16 +14,20 @@ namespace RPG.UI.Shops
         [SerializeField] private TextMeshProUGUI totalField;
         [SerializeField] private Transform listRoot;
         [SerializeField] private RowUI rowPrefab;
+        [SerializeField] private Button confirmButton;
         private Shopper shopper = null;
         private Shop currentShop = null;
+        private Color totalFieldColor;
 
         // Start is called before the first frame update
         void Start()
         {
+            totalFieldColor = totalField.color;
             shopper = GameObject.FindGameObjectWithTag("Player").GetComponent<Shopper>();
 
             if (shopper == null) return;
             shopper.onActiveShopChange += ShopChanged;
+            confirmButton.onClick.AddListener(ConfirmTransaction);
 
             ShopChanged();
         }
@@ -59,6 +64,8 @@ namespace RPG.UI.Shops
             }
 
             totalField.text = $"Total: ${currentShop.TransactionTotal():N2}";
+            totalField.color = currentShop.HasSufficientFunds() ? totalFieldColor : Color.red;
+            confirmButton.interactable = currentShop.CanTransact();
         }
 
         public void Close()
