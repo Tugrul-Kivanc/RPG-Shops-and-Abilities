@@ -26,7 +26,7 @@ namespace RPG.Shops
         }
         [SerializeField] private StockItemConfig[] stockConfig;
         private Dictionary<InventoryItem, int> transaction = new Dictionary<InventoryItem, int>();
-        private Dictionary<InventoryItem, int> stock = new Dictionary<InventoryItem, int>();
+        private Dictionary<InventoryItem, int> stockSold = new Dictionary<InventoryItem, int>();
         private bool isBuying = true;
         public bool IsBuying
         {
@@ -52,14 +52,6 @@ namespace RPG.Shops
 
         public event Action onChange;
 
-        private void Awake()
-        {
-            foreach (StockItemConfig stockItem in stockConfig)
-            {
-                stock[stockItem.item] = stockItem.initialStock;
-            }
-        }
-
         public void SetShopper(Shopper shopper)
         {
             currentShopper = shopper;
@@ -67,28 +59,77 @@ namespace RPG.Shops
 
         public IEnumerable<ShopItem> GetAllItems()
         {
-            int shopperLevel = GetShopperLevel();
+            Dictionary<InventoryItem, float> prices = CalculateFinalPrices();
+            Dictionary<InventoryItem, int> stocks = GetStocks();
 
-            foreach (StockItemConfig config in stockConfig)
+            foreach (InventoryItem item in stocks.Keys)
             {
-                if (shopperLevel < config.levelToUnlock) continue;
+                if (prices[item] <= 0) continue;
 
-                float price = CalculateFinalPrice(config);
+                float price = prices[item];
                 int quantityInTransaction = 0;
-                transaction.TryGetValue(config.item, out quantityInTransaction);
-                int currentStock = GetStock(config.item);
+                transaction.TryGetValue(item, out quantityInTransaction);
+                int currentStock = stocks[item];
 
-                yield return new ShopItem(config.item, currentStock, price, quantityInTransaction);
+                yield return new ShopItem(item, currentStock, price, quantityInTransaction);
             }
         }
 
-        private int GetStock(InventoryItem item)
+        private Dictionary<InventoryItem, float> CalculateFinalPrices()
         {
-            if (isBuying)
-                return stock[item];
-            else
+            Dictionary<InventoryItem, float> prices = new Dictionary<InventoryItem, float>();
+
+            foreach (var config in GetAvailableConfigs())
             {
-                return CountItemsInInventory(item);
+                if (isBuying)
+                {
+                    if (!prices.ContainsKey(config.item)) prices[config.item] = config.item.Price;
+
+                    prices[config.item] *= 1 - config.buyingDiscountPercentage / 100;
+                }
+                else
+                {
+                    prices[config.item] = config.item.Price * (sellingPercentage / 100);
+                }
+            }
+
+            return prices;
+        }
+
+        private Dictionary<InventoryItem, int> GetStocks()
+        {
+            Dictionary<InventoryItem, int> stocks = new Dictionary<InventoryItem, int>();
+
+            foreach (var config in GetAvailableConfigs())
+            {
+                if (isBuying)
+                {
+                    if (!stocks.ContainsKey(config.item))
+                    {
+                        stockSold.TryGetValue(config.item, out int sold);
+                        stocks[config.item] = -sold;
+                    }
+
+                    stocks[config.item] += config.initialStock;
+                }
+                else
+                {
+                    stocks[config.item] = CountItemsInInventory(config.item);
+                }
+            }
+
+            return stocks;
+        }
+
+        private IEnumerable<StockItemConfig> GetAvailableConfigs()
+        {
+            int shopperLevel = GetShopperLevel();
+
+            foreach (var config in stockConfig)
+            {
+                if (config.levelToUnlock > shopperLevel) continue;
+
+                yield return config;
             }
         }
 
@@ -110,24 +151,6 @@ namespace RPG.Shops
             return total;
         }
 
-        private float CalculateFinalPrice(StockItemConfig config)
-        {
-            if (isBuying)
-            {
-                float finalPrice = config.item.Price;
-
-                if (config.buyingDiscountPercentage > 0)
-                {
-                    finalPrice *= (1 - config.buyingDiscountPercentage / 100);
-                }
-
-                return finalPrice;
-            }
-            else
-            {
-                return config.item.Price * (sellingPercentage / 100);
-            }
-        }
         public IEnumerable<ShopItem> GetFilteredItems()
         {
             foreach (ShopItem shopItem in GetAllItems())
@@ -145,7 +168,8 @@ namespace RPG.Shops
                 transaction[item] = 0;
             }
 
-            int stock = GetStock(item);
+            var stocks = GetStocks();
+            int stock = stocks[item];
             if (transaction[item] + quantity > stock)
             {
                 transaction[item] = stock;
@@ -247,7 +271,8 @@ namespace RPG.Shops
             if (isSuccessful)
             {
                 AddToTransaction(item, -1);
-                stock[item]--;
+                if (!stockSold.ContainsKey(item)) stockSold[item] = 0;
+                stockSold[item]++;
                 shopperPurse.UpdateBalance(-price);
             }
         }
@@ -259,7 +284,8 @@ namespace RPG.Shops
 
             AddToTransaction(item, -1);
             shopperInventory.RemoveFromSlot(slot, 1);
-            stock[item]++;
+            if (!stockSold.ContainsKey(item)) stockSold[item] = 0;
+            stockSold[item]--;
             shopperPurse.UpdateBalance(price);
         }
 
