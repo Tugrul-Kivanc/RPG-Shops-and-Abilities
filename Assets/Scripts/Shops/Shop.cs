@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using GameDevTV.Inventories;
 using RPG.Control;
 using RPG.Inventories;
+using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Shops
@@ -21,6 +22,7 @@ namespace RPG.Shops
             public InventoryItem item;
             public int initialStock;
             [Range(0, 100)] public float buyingDiscountPercentage;
+            public int levelToUnlock = 0;
         }
         [SerializeField] private StockItemConfig[] stockConfig;
         private Dictionary<InventoryItem, int> transaction = new Dictionary<InventoryItem, int>();
@@ -65,10 +67,13 @@ namespace RPG.Shops
 
         public IEnumerable<ShopItem> GetAllItems()
         {
+            int shopperLevel = GetShopperLevel();
+
             foreach (StockItemConfig config in stockConfig)
             {
-                float price = CalculateFinalPrice(config);
+                if (shopperLevel < config.levelToUnlock) continue;
 
+                float price = CalculateFinalPrice(config);
                 int quantityInTransaction = 0;
                 transaction.TryGetValue(config.item, out quantityInTransaction);
                 int currentStock = GetStock(config.item);
@@ -281,6 +286,12 @@ namespace RPG.Shops
             }
 
             return true;
+        }
+        private int GetShopperLevel()
+        {
+            BaseStats stats = currentShopper.GetComponent<BaseStats>();
+            if (stats == null) return 0;
+            return stats.GetLevel();
         }
     }
 }
