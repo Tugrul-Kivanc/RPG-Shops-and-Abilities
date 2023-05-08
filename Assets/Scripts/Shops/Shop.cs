@@ -12,6 +12,7 @@ namespace RPG.Shops
     {
         [SerializeField] private string shopName;
         public string ShopName => shopName;
+        [Range(10, 100)][SerializeField] private float sellingPercentage = 40f;
         private Shopper currentShopper = null;
 
         [System.Serializable]
@@ -24,6 +25,16 @@ namespace RPG.Shops
         [SerializeField] private StockItemConfig[] stockConfig;
         private Dictionary<InventoryItem, int> transaction = new Dictionary<InventoryItem, int>();
         private Dictionary<InventoryItem, int> stock = new Dictionary<InventoryItem, int>();
+        private bool isBuying = true;
+        public bool IsBuying
+        {
+            get { return isBuying; }
+            set
+            {
+                isBuying = value;
+                onChange?.Invoke();
+            }
+        }
 
         public event Action onChange;
 
@@ -38,25 +49,66 @@ namespace RPG.Shops
         {
             currentShopper = shopper;
         }
-        public void SelectMode(bool isBuying) { }
-        public bool IsInBuyingMode() { return true; }
         public void SelectFilter(ItemCategory category) { }
         public ItemCategory GetFilter() { return ItemCategory.None; }
         public IEnumerable<ShopItem> GetAllItems()
         {
             foreach (StockItemConfig config in stockConfig)
             {
-                float price = config.item.Price;
-                if (config.buyingDiscountPercentage > 0)
-                {
-                    price *= (1 - config.buyingDiscountPercentage / 100);
-                }
+                float price = CalculateFinalPrice(config);
 
                 int quantityInTransaction = 0;
                 transaction.TryGetValue(config.item, out quantityInTransaction);
-                int currentStock = stock[config.item];
+                int currentStock = GetStock(config.item);
 
                 yield return new ShopItem(config.item, currentStock, price, quantityInTransaction);
+            }
+        }
+
+        private int GetStock(InventoryItem item)
+        {
+            if (isBuying)
+                return stock[item];
+            else
+            {
+                return CountItemsInInventory(item);
+            }
+        }
+
+        private int CountItemsInInventory(InventoryItem item)
+        {
+            Inventory shopperInventory = currentShopper.GetComponent<Inventory>();
+
+            if (shopperInventory == null) return 0;
+
+            int total = 0;
+            for (int i = 0; i < shopperInventory.GetSize(); i++)
+            {
+                if (item == shopperInventory.GetItemInSlot(i))
+                {
+                    total += shopperInventory.GetNumberInSlot(i);
+                }
+            }
+
+            return total;
+        }
+
+        private float CalculateFinalPrice(StockItemConfig config)
+        {
+            if (isBuying)
+            {
+                float finalPrice = config.item.Price;
+
+                if (config.buyingDiscountPercentage > 0)
+                {
+                    finalPrice *= (1 - config.buyingDiscountPercentage / 100);
+                }
+
+                return finalPrice;
+            }
+            else
+            {
+                return config.item.Price * (sellingPercentage / 100);
             }
         }
         public IEnumerable<ShopItem> GetFilteredItems()
@@ -70,9 +122,10 @@ namespace RPG.Shops
                 transaction[item] = 0;
             }
 
-            if (transaction[item] + quantity > stock[item])
+            int stock = GetStock(item);
+            if (transaction[item] + quantity > stock)
             {
-                transaction[item] = stock[item];
+                transaction[item] = stock;
             }
             else
             {
@@ -108,12 +161,16 @@ namespace RPG.Shops
         }
         public bool HasSufficientFunds()
         {
+            if (!isBuying) return true;
+
             Purse purse = currentShopper.GetComponent<Purse>();
             if (purse == null) return false;
             return purse.Balance >= TransactionTotal();
         }
         public bool HasInventorySpace()
         {
+            if (!isBuying) return true;
+
             Inventory shopperInventory = currentShopper.GetComponent<Inventory>();
             if (shopperInventory == null) return false;
 
@@ -146,18 +203,51 @@ namespace RPG.Shops
 
                 for (int i = 0; i < quantity; i++)
                 {
-                    if (shopperPurse.Balance < price) break;
-
-                    bool isSuccessful = shopperInventory.AddToFirstEmptySlot(item, 1);
-                    if (isSuccessful)
+                    if (isBuying)
                     {
-                        AddToTransaction(item, -1);
-                        stock[item]--;
-                        shopperPurse.UpdateBalance(-price);
+                        BuyItem(shopperInventory, shopperPurse, item, price);
+                    }
+                    else
+                    {
+                        SellItem(shopperInventory, shopperPurse, item, price);
                     }
                 }
             }
             onChange?.Invoke();
+        }
+
+        private void BuyItem(Inventory shopperInventory, Purse shopperPurse, InventoryItem item, float price)
+        {
+            if (shopperPurse.Balance < price) return;
+
+            bool isSuccessful = shopperInventory.AddToFirstEmptySlot(item, 1);
+            if (isSuccessful)
+            {
+                AddToTransaction(item, -1);
+                stock[item]--;
+                shopperPurse.UpdateBalance(-price);
+            }
+        }
+
+        private void SellItem(Inventory shopperInventory, Purse shopperPurse, InventoryItem item, float price)
+        {
+            int slot = FindFirstItemSlot(shopperInventory, item);
+            if (slot == -1) return;
+
+            AddToTransaction(item, -1);
+            shopperInventory.RemoveFromSlot(slot, 1);
+            stock[item]++;
+            shopperPurse.UpdateBalance(price);
+        }
+
+        private int FindFirstItemSlot(Inventory shopperInventory, InventoryItem item)
+        {
+            for (int i = 0; i < shopperInventory.GetSize(); i++)
+            {
+                if (item == shopperInventory.GetItemInSlot(i)) return i;
+            }
+
+            return -1;
         }
 
         public CursorType GetCursorType()
