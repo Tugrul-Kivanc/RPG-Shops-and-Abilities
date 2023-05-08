@@ -32,12 +32,12 @@ namespace RPG.UI.Shops
 
         public void Add()
         {
-            currentShop.AddToTransaction(item.GetInventoryItem(), +1);
+            currentShop.AddToTransaction(item.InventoryItem, +1);
         }
 
         public void Remove()
         {
-            currentShop.AddToTransaction(item.GetInventoryItem(), -1);
+            currentShop.AddToTransaction(item.InventoryItem, -1);
         }
     }
 }

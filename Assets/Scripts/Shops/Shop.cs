@@ -36,6 +36,18 @@ namespace RPG.Shops
             }
         }
 
+        private ItemCategory filter = ItemCategory.None;
+        public ItemCategory Filter
+        {
+            get { return filter; }
+            set
+            {
+                filter = value;
+                print(filter);
+                onChange?.Invoke();
+            }
+        }
+
         public event Action onChange;
 
         private void Awake()
@@ -45,12 +57,12 @@ namespace RPG.Shops
                 stock[stockItem.item] = stockItem.initialStock;
             }
         }
+
         public void SetShopper(Shopper shopper)
         {
             currentShopper = shopper;
         }
-        public void SelectFilter(ItemCategory category) { }
-        public ItemCategory GetFilter() { return ItemCategory.None; }
+
         public IEnumerable<ShopItem> GetAllItems()
         {
             foreach (StockItemConfig config in stockConfig)
@@ -113,7 +125,13 @@ namespace RPG.Shops
         }
         public IEnumerable<ShopItem> GetFilteredItems()
         {
-            return GetAllItems();
+            foreach (ShopItem shopItem in GetAllItems())
+            {
+                if (Filter == ItemCategory.None || shopItem.InventoryItem.Category == Filter)
+                {
+                    yield return shopItem;
+                }
+            }
         }
         public void AddToTransaction(InventoryItem item, int quantity)
         {
@@ -178,7 +196,7 @@ namespace RPG.Shops
 
             foreach (ShopItem shopItem in GetAllItems())
             {
-                InventoryItem item = shopItem.GetInventoryItem();
+                InventoryItem item = shopItem.InventoryItem;
                 int quantity = shopItem.QuantityInTransaction;
 
                 for (int i = 0; i < quantity; i++)
@@ -197,7 +215,7 @@ namespace RPG.Shops
 
             foreach (ShopItem shopItem in GetAllItems())
             {
-                InventoryItem item = shopItem.GetInventoryItem();
+                InventoryItem item = shopItem.InventoryItem;
                 int quantity = shopItem.QuantityInTransaction;
                 float price = shopItem.Price;
 

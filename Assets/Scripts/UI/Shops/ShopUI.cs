@@ -44,6 +44,11 @@ namespace RPG.UI.Shops
             currentShop = shopper.GetActiveShop();
             gameObject.SetActive(currentShop != null);
 
+            foreach (var button in GetComponentsInChildren<FilterButtonUI>())
+            {
+                button.SetShop(currentShop);
+            }
+
             if (currentShop == null) return;
             shopName.text = currentShop.ShopName;
 
@@ -80,6 +85,11 @@ namespace RPG.UI.Shops
             {
                 switchText.text = "Switch to Buying";
                 confirmText.text = "Sell";
+            }
+
+            foreach (var button in GetComponentsInChildren<FilterButtonUI>())
+            {
+                button.RefreshUI();
             }
         }
 

@@ -11,6 +11,7 @@ namespace RPG.Shops
         private float price;
         private int quantityInTransaction;
 
+        public InventoryItem InventoryItem => item;
         public Sprite Icon => item.GetIcon();
         public string Name => item.GetDisplayName();
         public int Stock => stock;
@@ -23,11 +24,6 @@ namespace RPG.Shops
             this.stock = stock;
             this.price = price;
             this.quantityInTransaction = quantityInTransaction;
-        }
-
-        public InventoryItem GetInventoryItem()
-        {
-            return item;
         }
     }
 }

@@ -29,6 +29,8 @@ namespace GameDevTV.Inventories
         [SerializeField] bool stackable = false;
         [SerializeField] float price = 0f;
         public float Price => price;
+        [SerializeField] ItemCategory category = ItemCategory.None;
+        public ItemCategory Category => category;
 
         // STATE
         static Dictionary<string, InventoryItem> itemLookupCache;
