@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e8618c2418b316641bcc3cb2d2c8d1c7, type: 3}
-  m_Name: Fireblast
+  m_Name: Fireblast Ability
   m_EditorClassIdentifier: 
   itemID: 8c6a8ca9-38a2-441f-a962-17bd392fc588
   displayName: Fireblast
@@ -21,3 +21,6 @@ MonoBehaviour:
   price: 50
   category: 5
   consumable: 0
+  targetingStrategy: {fileID: 11400000, guid: 5e2e53226b370cc4aabb59e7fb7f3ffe, type: 2}
+  filteringStrategies:
+  - {fileID: 11400000, guid: a3a9d33c9733c5048ac4494e121137c9, type: 2}
