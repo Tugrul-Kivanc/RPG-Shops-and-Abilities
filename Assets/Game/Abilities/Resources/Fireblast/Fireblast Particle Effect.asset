@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ad202837a1e42984d81671ee571cb531, type: 3}
-  m_Name: Fireblast Blast Effect
+  m_Name: Fireblast Particle Effect
   m_EditorClassIdentifier: 
   prefabToSpawn: {fileID: 444372, guid: 6636b3078b0905e489f698a11b7a6b6b, type: 3}
   destroyDelay: 5
