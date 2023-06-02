@@ -23,7 +23,8 @@ namespace RPG.Attributes
 
         bool isDead = false;
 
-        private void Awake() {
+        private void Awake()
+        {
             healthPoints = new LazyValue<float>(GetInitialHealth);
         }
 
@@ -37,11 +38,13 @@ namespace RPG.Attributes
             healthPoints.ForceInit();
         }
 
-        private void OnEnable() {
+        private void OnEnable()
+        {
             GetComponent<BaseStats>().onLevelUp += RegenerateHealth;
         }
 
-        private void OnDisable() {
+        private void OnDisable()
+        {
             GetComponent<BaseStats>().onLevelUp -= RegenerateHealth;
         }
 
@@ -52,14 +55,17 @@ namespace RPG.Attributes
 
         public void TakeDamage(GameObject instigator, float damage)
         {
+            if (IsDead())
+                return;
+
             healthPoints.value = Mathf.Max(healthPoints.value - damage, 0);
-            
-            if(healthPoints.value == 0)
+
+            if (healthPoints.value == 0)
             {
                 onDie.Invoke();
                 Die();
                 AwardExperience(instigator);
-            } 
+            }
             else
             {
                 takeDamage.Invoke(damage);
@@ -68,6 +74,9 @@ namespace RPG.Attributes
 
         public void Heal(float healthToRestore)
         {
+            if (IsDead())
+                return;
+
             healthPoints.value = Mathf.Min(healthPoints.value + healthToRestore, GetMaxHealthPoints());
         }
 
@@ -121,8 +130,8 @@ namespace RPG.Attributes
 
         public void RestoreState(object state)
         {
-            healthPoints.value = (float) state;
-            
+            healthPoints.value = (float)state;
+
             if (healthPoints.value <= 0)
             {
                 Die();
