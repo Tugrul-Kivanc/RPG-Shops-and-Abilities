@@ -9,7 +9,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6519c1a3089e1674d8442babd3048928, type: 3}
-  m_Name: Fireblast Health Effect
+  m_Script: {fileID: 11500000, guid: ad202837a1e42984d81671ee571cb531, type: 3}
+  m_Name: Health Potion Spawn Particle Effect
   m_EditorClassIdentifier: 
-  healthChange: -10
+  prefabToSpawn: {fileID: 4829491530746772, guid: 7098bdbdcde165049872f566c6a00e5f,
+    type: 3}
+  destroyDelay: -1

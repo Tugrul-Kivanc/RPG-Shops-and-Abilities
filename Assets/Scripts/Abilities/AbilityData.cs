@@ -17,6 +17,11 @@ namespace RPG.Abilities
             User = user;
         }
 
+        public void SetTargets(IEnumerable<GameObject> targets)
+        {
+            Targets = targets;
+        }
+
         public void StartCoroutine(IEnumerator coroutine)
         {
             User.GetComponent<MonoBehaviour>().StartCoroutine(coroutine);
