@@ -26,5 +26,6 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a3a9d33c9733c5048ac4494e121137c9, type: 2}
   effectStrategies:
   - {fileID: 11400000, guid: f6ca7adf7767476479ff7415b1c5bbe4, type: 2}
+  - {fileID: 11400000, guid: 5dcd08d535afbd34cb40b793f6d351cd, type: 2}
   cooldownTime: 2
   manaCost: 20
