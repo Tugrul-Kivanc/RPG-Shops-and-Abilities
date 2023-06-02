@@ -24,7 +24,8 @@ namespace RPG.Combat
         WeaponConfig currentWeaponConfig;
         LazyValue<Weapon> currentWeapon;
 
-        private void Awake() {
+        private void Awake()
+        {
             currentWeaponConfig = defaultWeapon;
             currentWeapon = new LazyValue<Weapon>(SetupDefaultWeapon);
             equipment = GetComponent<Equipment>();
@@ -39,7 +40,7 @@ namespace RPG.Combat
             return AttachWeapon(defaultWeapon);
         }
 
-        private void Start() 
+        private void Start()
         {
             currentWeapon.ForceInit();
         }
@@ -90,7 +91,14 @@ namespace RPG.Combat
         public Health GetTarget()
         {
             return target;
-        } 
+        }
+
+        public Transform GetHandTransform(bool isRightHand)
+        {
+            if (isRightHand)
+                return rightHandTransform;
+            return leftHandTransform;
+        }
 
         private void AttackBehaviour()
         {
@@ -112,7 +120,7 @@ namespace RPG.Combat
         // Animation Event
         void Hit()
         {
-            if(target == null) { return; }
+            if (target == null) { return; }
 
             float damage = GetComponent<BaseStats>().GetStat(Stat.Damage);
 
@@ -145,9 +153,9 @@ namespace RPG.Combat
         {
             if (combatTarget == null) { return false; }
             if (!GetComponent<Mover>().CanMoveTo(combatTarget.transform.position) &&
-                !GetIsInRange(combatTarget.transform)) 
+                !GetIsInRange(combatTarget.transform))
             {
-                return false; 
+                return false;
             }
             Health targetToTest = combatTarget.GetComponent<Health>();
             return targetToTest != null && !targetToTest.IsDead();
