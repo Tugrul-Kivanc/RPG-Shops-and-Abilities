@@ -6,15 +6,18 @@ namespace RPG.Abilities
 {
     public class AbilityData
     {
-        private GameObject user;
-        private IEnumerable<GameObject> targets;
-
-        public GameObject User { get { return user; } private set { } }
-        public IEnumerable<GameObject> Targets { get { return targets; } set { targets = value; } }
+        public GameObject User { get; private set; }
+        public IEnumerable<GameObject> Targets { get; set; }
+        public Vector3 TargetedPoint { get; set; }
 
         public AbilityData(GameObject user)
         {
-            this.user = user;
+            User = user;
+        }
+
+        public void StartCoroutine(IEnumerator coroutine)
+        {
+            User.GetComponent<MonoBehaviour>().StartCoroutine(coroutine);
         }
     }
 }

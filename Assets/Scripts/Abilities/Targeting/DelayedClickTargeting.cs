@@ -48,7 +48,8 @@ namespace RPG.Abilities.Targeting
                         yield return new WaitWhile(() => Input.GetMouseButton(0));
                         playerController.enabled = true;
                         targetingPrefabInstance.gameObject.SetActive(false);
-                        abilityData.Targets = GetGameObjectsInRadius(raycastHit.point);
+                        abilityData.TargetedPoint = raycastHit.point;
+                        abilityData.Targets = GetGameObjectsInRadius(abilityData.TargetedPoint);
                         finished();
                         yield break;
                     }
