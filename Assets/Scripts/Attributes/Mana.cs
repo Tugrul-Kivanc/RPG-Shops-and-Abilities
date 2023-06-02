@@ -1,12 +1,13 @@
 using System.Collections;
 using System.Collections.Generic;
+using GameDevTV.Saving;
 using GameDevTV.Utils;
 using RPG.Stats;
 using UnityEngine;
 
 namespace RPG.Attributes
 {
-    public class Mana : MonoBehaviour
+    public class Mana : MonoBehaviour, ISaveable
     {
         public LazyValue<float> CurrentMana { get; private set; }
 
@@ -45,6 +46,16 @@ namespace RPG.Attributes
         public float GetRegenRate()
         {
             return GetComponent<BaseStats>().GetStat(Stat.ManaRegenRate);
+        }
+
+        public object CaptureState()
+        {
+            return CurrentMana.value;
+        }
+
+        public void RestoreState(object state)
+        {
+            CurrentMana.value = (float)state;
         }
     }
 }
