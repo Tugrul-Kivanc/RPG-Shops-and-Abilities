@@ -223,7 +223,7 @@ PrefabInstance:
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.size
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
@@ -241,29 +241,35 @@ PrefabInstance:
         type: 3}
       propertyPath: stockConfig.Array.data[2].item
       value: 
-      objectReference: {fileID: 11400000, guid: f7ab5b5ce48f12a4ca8e09bdbfeba6ce,
+      objectReference: {fileID: 11400000, guid: b7a9546ac8ebcbd44ab3d218440ce5b1,
         type: 2}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[3].item
       value: 
-      objectReference: {fileID: 11400000, guid: d7c0c8d4973a09742a89cdcbcca1bb3a,
+      objectReference: {fileID: 11400000, guid: f7ab5b5ce48f12a4ca8e09bdbfeba6ce,
         type: 2}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[4].item
       value: 
-      objectReference: {fileID: 11400000, guid: 8bb0e49a942820a44af61e0ed9f2993c,
+      objectReference: {fileID: 11400000, guid: d7c0c8d4973a09742a89cdcbcca1bb3a,
         type: 2}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[5].item
       value: 
-      objectReference: {fileID: 11400000, guid: d64a307491012e543995a2eef4f8cf74,
+      objectReference: {fileID: 11400000, guid: 8bb0e49a942820a44af61e0ed9f2993c,
         type: 2}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[6].item
+      value: 
+      objectReference: {fileID: 11400000, guid: d64a307491012e543995a2eef4f8cf74,
+        type: 2}
+    - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
+        type: 3}
+      propertyPath: stockConfig.Array.data[7].item
       value: 
       objectReference: {fileID: 11400000, guid: e24424a2c9b854d44bdca41b0ac2ed0c,
         type: 2}
@@ -280,12 +286,12 @@ PrefabInstance:
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[2].initialStock
-      value: 1
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[3].initialStock
-      value: 5
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
@@ -300,6 +306,11 @@ PrefabInstance:
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[6].initialStock
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
+        type: 3}
+      propertyPath: stockConfig.Array.data[7].initialStock
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
@@ -320,21 +331,26 @@ PrefabInstance:
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[3].levelToUnlock
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
-        type: 3}
-      propertyPath: stockConfig.Array.data[4].levelToUnlock
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
-      propertyPath: stockConfig.Array.data[5].levelToUnlock
+      propertyPath: stockConfig.Array.data[4].levelToUnlock
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
+      propertyPath: stockConfig.Array.data[5].levelToUnlock
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
+        type: 3}
       propertyPath: stockConfig.Array.data[6].levelToUnlock
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
+        type: 3}
+      propertyPath: stockConfig.Array.data[7].levelToUnlock
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
@@ -350,16 +366,21 @@ PrefabInstance:
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[2].buyingDiscountPercentage
-      value: 0
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[3].buyingDiscountPercentage
-      value: 20
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
         type: 3}
       propertyPath: stockConfig.Array.data[4].buyingDiscountPercentage
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 7017300354244096412, guid: cc822838b191c4348aa284b12c70a2e4,
+        type: 3}
+      propertyPath: stockConfig.Array.data[7].buyingDiscountPercentage
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
@@ -14175,7 +14196,7 @@ PrefabInstance:
     - target: {fileID: 5263524460118599961, guid: 9065ec7e81ca8034a865d6fdd7906af9,
         type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -570.7493
+      value: -570.75006
       objectReference: {fileID: 0}
     - target: {fileID: 5263917500653042737, guid: 9065ec7e81ca8034a865d6fdd7906af9,
         type: 3}

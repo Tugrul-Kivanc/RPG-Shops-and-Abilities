@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c637d564254d99b4cad936a0098e8138, type: 3}
-  m_Name: Firebolt Spawn Projectile Effect
+  m_Name: Fireball Spawn Projectile Effect
   m_EditorClassIdentifier: 
   projectileToSpawn: {fileID: 4363093564197430368, guid: fcff971cc6939004ca7e345f8d0db844,
     type: 3}
-  damageAmount: 30
+  damageAmount: 10
   isRightHand: 1
-  useTargetPoint: 0
+  useTargetPoint: 1
