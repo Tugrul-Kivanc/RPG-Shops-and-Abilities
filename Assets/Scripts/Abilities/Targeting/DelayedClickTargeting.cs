@@ -34,7 +34,7 @@ namespace RPG.Abilities.Targeting
 
             targetingPrefabInstance.localScale = new Vector3(areaOfEffectRadius * 2, 1, areaOfEffectRadius * 2);
 
-            while (true)
+            while (!abilityData.IsCancelled)
             {
                 Cursor.SetCursor(cursorTexture, cursorHotspot, CursorMode.Auto);
 
@@ -46,12 +46,10 @@ namespace RPG.Abilities.Targeting
                     if (Input.GetMouseButtonDown(0))
                     {
                         yield return new WaitWhile(() => Input.GetMouseButton(0));
-                        playerController.enabled = true;
-                        targetingPrefabInstance.gameObject.SetActive(false);
+
                         abilityData.TargetedPoint = raycastHit.point;
                         abilityData.Targets = GetGameObjectsInRadius(abilityData.TargetedPoint);
-                        finished();
-                        yield break;
+                        break;
                     }
                     if (Input.GetMouseButtonDown(1))
                     {
@@ -63,6 +61,10 @@ namespace RPG.Abilities.Targeting
 
                 yield return null;
             }
+
+            playerController.enabled = true;
+            targetingPrefabInstance.gameObject.SetActive(false);
+            finished();
         }
 
         private IEnumerable<GameObject> GetGameObjectsInRadius(Vector3 point)

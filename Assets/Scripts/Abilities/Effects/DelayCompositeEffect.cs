@@ -10,6 +10,7 @@ namespace RPG.Abilities.Effects
     {
         [SerializeField] private float delay = 0;
         [SerializeField] private List<EffectStrategy> delayedEffects;
+        [SerializeField] private bool abortIfCancelled = false;
 
         public override void StartEffect(AbilityData abilityData, Action finished)
         {
@@ -19,6 +20,9 @@ namespace RPG.Abilities.Effects
         private IEnumerator DelayedEffect(AbilityData abilityData, Action finished)
         {
             yield return new WaitForSeconds(delay);
+
+            if (abortIfCancelled && abilityData.IsCancelled)
+                yield break;
 
             foreach (var effect in delayedEffects)
             {
